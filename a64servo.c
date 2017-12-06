@@ -53,7 +53,7 @@ static struct hrtimer ch15_timer;
 //set to 0 = 1 000 000 nS
 // min = 1000uS, max = 2000uS
 static unsigned long ch_value[16] = {1000000,1000000,1000000,1000000,1000000,1000000,1000000,1000000,
-									 1000000,1000000,1000000,1000000,1000000,1000000,1000000,1000000};
+                                     1000000,1000000,1000000,1000000,1000000,1000000,1000000,1000000};
 
 /* 
  * This structure will hold the functions to be called
@@ -305,7 +305,7 @@ static int device_open(struct inode *inode, struct file *file)
 	porte=readl(pe_base+PE_DATA);
 
 	sprintf(Message, "00:%03lu,01:%03lu,02:%03lu,03:%03lu,04:%03lu,05:%03lu,06:%03lu,07:%03lu,"
-							"08:%03lu,09:%03lu,10:%03lu,11:%03lu,12:%03lu,13:%03lu,14:%03lu,15:%03lu\r",
+                         "08:%03lu,09:%03lu,10:%03lu,11:%03lu,12:%03lu,13:%03lu,14:%03lu,15:%03lu\r\n",
 	 ch_value[0]/1000-1000,ch_value[1]/1000-1000,ch_value[2]/1000-1000,ch_value[3]/1000-1000,ch_value[4]/1000-1000,
 	 ch_value[5]/1000-1000,ch_value[6]/1000-1000,ch_value[7]/1000-1000,ch_value[8]/1000-1000,ch_value[9]/1000-1000,
 	 ch_value[10]/1000-1000,ch_value[11]/1000-1000,ch_value[12]/1000-1000,ch_value[13]/1000-1000,ch_value[14]/1000-1000,ch_value[15]/1000-1000);
