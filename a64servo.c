@@ -14,7 +14,7 @@
 #include "a64servo.h"
 #define SUCCESS 0
 #define DEVICE_NAME DEVICE_FILE_NAME
-#define BUF_LEN 512
+#define BUF_LEN 128
 
 
 static void a64servo_exit(void);
@@ -28,6 +28,8 @@ static ssize_t device_write(struct file *file, const char __user * buffer, size_
 static void __iomem *pe_base;
 static uint32_t porte;
 static uint32_t porte_m;
+static uint32_t econfig0;
+static uint32_t econfig1;
 
 
 
@@ -407,10 +409,24 @@ device_write(struct file *file,
 							if ((value>0) && (value < 1000)){
 								 ch_value[ch]=(value+1000)*1000;
 								 porte_m |= (1<<ch);
+							//set pin as OUTPUT	 
+						    if (ch < 8)
+							{
+							porte =	(readl(pe_base + PE_CONFIG0) & ~(0xf << ch*4)) | (1 << ch*4);
+							writel(porte, pe_base + PE_CONFIG0);	
+							}		 
+							else
+							{	 
+							ch=ch-8;	
+							porte =	(readl(pe_base + PE_CONFIG1) & ~(0xf << ch*4)) | (1 << ch*4);
+							writel(porte, pe_base + PE_CONFIG1);									 
+							}	 
 							}	 
 							else
 							{
 							//disable pin
+							// NOTE: Pin state before loading is NOT RESTORED at this point
+							// all pins states will be restored when unloading module
 							porte_m &= ~(1<<ch);
 							ch_value[ch] = 1000000;	
 							}
@@ -559,11 +575,10 @@ static int __init a64servo_init(void)
 //TODO:	
 	pe_base = ioremap(SW_PORTE_IO_BASE, 0x20);
 	
-//PE0-PE15 as outputs.	
-	writel(0x11111111, pe_base + PE_CONFIG0);  //PE CONF0 7-0
-	writel(0x11111111, pe_base + PE_CONFIG1);  //PE CONF1 15-8
-	writel(0x00000000, pe_base + PE_CONFIG2);  //PE CONF2
-
+//save configs
+	econfig0 = readl(pe_base+PE_CONFIG0);
+	econfig1 = readl(pe_base+PE_CONFIG1);
+	
 	porte_m = 0;
 
 	printk(KERN_INFO "SERVO: Driver loaded. To use the driver, create a dev file with\n");
@@ -581,6 +596,9 @@ static void __exit a64servo_exit(void)
 	/* 
 	 * Unregister the device 
 	 */
+//restore configs
+	writel(econfig0, pe_base + PE_CONFIG0);
+	writel(econfig1, pe_base + PE_CONFIG1);
 
 	del_timer(&ch_start_timer);
 	hrtimer_cancel( &ch0_timer );
