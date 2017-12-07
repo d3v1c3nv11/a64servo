@@ -1,6 +1,14 @@
 # a64servo
 LKM a64-olinuxino software pwm 16 channels driver for servos
 
+How to build:
+```bash
+git clone https://github.com/d3v1c3nv11/a64servo.git
+cd a64servo
+make
+```
+Note that Olimex images dated after a64olinuxino_ubuntu_16.04.3_20171110.img comes ready for development.
+
 
 usage: Execute the script as root
 
