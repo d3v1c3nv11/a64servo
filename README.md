@@ -4,7 +4,7 @@ LKM (Loadable Kernel Module) for Olimex A64-OLinuXino
 
 16-channel (16-pin) software PWM driver for servo motors.
 
-How to get and build:
+**How to get and build:**
 
 The procedure should be executed on the A64-OLinuXino board itself. You need to have Internet access 
 via the board and then execute in the command line:
@@ -15,13 +15,13 @@ make
 ```
 Note that Olimex images newer than a64olinuxino_ubuntu_16.04.3_20171110.img come with the module already loaded.
 
-General information:
+**General information:**
 
 The module enables PWM functionality at processor pins PE0-PE15. These pins are available at one of the rows the GPIO1 pads (pin #5, #7, #9...#33, #35) on the A64-OLinuXino board. Refer to the table at the end. IF YOU ARE STILL NOT SURE WHERE PROCESSOR PINS PE0-PE15 ARE AVAILABLE ON THE BOARD, REFER TO THE SCHEMATIC.
 
 When you load the module, it doesn't change the current configuration of these 16 pins. However, when you use one of the commands from this kernel module, it would automatically changed the pin's direction to output. Even if we stop the PWM available at the specific pin, the direction would remain output. The only way to revert back to the original configuration of the pin before using the PWM function, is to either unload the servo kernel module or to overwrite the pin function using other means (you can set it to input by using the A64 python module, for example).
 
-Usage: 
+**Usage:** 
 
 Execute the script use sudo before each command.
 
@@ -45,6 +45,16 @@ read settings:
 ```bash
 cat /dev/servo
 ```
+
+**Wiring**
+
+All servos must be powered by **external power source 5V** with common ground with the A64-OLinuXino board.
+
+**red wire** to positive
+
+**brown (black) wire** to ground
+
+**orange (yellow, white, blue) wire** connect to GPIO1 pins as follow:
 
 Number # | Processor pin | GPIO1 pad #
 :---: | :---: | :---:
