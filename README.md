@@ -23,15 +23,15 @@ When you load the module, it doesn't change the current configuration of these 1
 
 Usage: 
 
-Execute the script as root (either log as root or use sudo before each command).
+Execute the script use sudo before each command.
 
 Load module
 ```bash
-./servo.sh load
+sudo ./servo.sh load
 ```
 Unload module
 ```bash
-./servo.sh unload
+sudo ./servo.sh unload
 ```
 How to change value of a channel (pin):
 echo CC:VVV, > /dev/servo
